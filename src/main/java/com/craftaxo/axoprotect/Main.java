@@ -284,11 +284,30 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
 
     private boolean isTrapWorld(World world) {
         if (!getConfig().getBoolean("integrations.skip-trapplugin-worlds", true)) return false;
-        if (Bukkit.getPluginManager().getPlugin("TrapPlugin") == null) return false;
+        org.bukkit.plugin.Plugin installed = Bukkit.getPluginManager().getPlugin("TrapPlugin");
+        if (installed instanceof JavaPlugin trapPlugin) {
+            ConfigurationSection traps = trapPlugin.getConfig().getConfigurationSection("traps");
+            if (traps != null) {
+                for (String id : traps.getKeys(false)) {
+                    String base = "traps." + id;
+                    String direct = trapPlugin.getConfig().getString(base, "");
+                    if (chunkKeyWorldMatches(direct, world.getName())) return true;
+                    for (String key : trapPlugin.getConfig().getStringList(base + ".chunks")) {
+                        if (chunkKeyWorldMatches(key, world.getName())) return true;
+                    }
+                }
+            }
+        }
         for (String name : getConfig().getStringList("integrations.trapplugin-worlds")) {
             if (world.getName().equalsIgnoreCase(name)) return true;
         }
         return false;
+    }
+
+    private boolean chunkKeyWorldMatches(String key, String worldName) {
+        if (key == null || key.isBlank()) return false;
+        String[] parts = key.split(";");
+        return parts.length >= 3 && parts[0].equalsIgnoreCase(worldName);
     }
 
     private String msg(String key) {
