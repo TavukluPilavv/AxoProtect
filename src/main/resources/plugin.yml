@@ -4,17 +4,19 @@ main: com.craftaxo.axoprotect.Main
 api-version: '1.21'
 softdepend: [Multiverse-Core, TrapPlugin, Essentials, EssentialsX, LuckPerms]
 commands:
-  dünya:
+  dunya:
     description: Dünya içinde koruma alanı seçer ve ayarlar.
     usage: /dünya <dünya> normal <blokkırma|blokkoyma> <aç|kapa>
-    aliases: [dunya]
-    permission: axoprotect.admin
+    aliases: [dünya]
 permissions:
   axoprotect.admin:
     description: AxoProtect yönetim komutları.
     default: op
   axoprotect.bypass:
     description: AxoProtect korumalarını aşar.
+    default: op
+  axoprotect.wand:
+    description: Bölge seçim baltasını kullanabilir.
     default: op
   axoprotect.blokkırma.aç:
     description: Kırmanın serbest olduğu alanları seçebilir.
@@ -28,6 +30,15 @@ permissions:
   axoprotect.blokkoyma.kapa:
     description: Koymanın engellendiği alanları seçebilir.
     default: op
-  axoprotect.wand:
-    description: Bölge seçim baltasını kullanabilir.
+  axoprotect.blokkirma.ac:
+    description: Block breaking allow area selection.
+    default: op
+  axoprotect.blokkirma.kapa:
+    description: Block breaking deny area selection.
+    default: op
+  axoprotect.blokkoyma.ac:
+    description: Block placing allow area selection.
+    default: op
+  axoprotect.blokkoyma.kapa:
+    description: Block placing deny area selection.
     default: op
