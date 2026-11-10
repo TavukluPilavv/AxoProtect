@@ -1,0 +1,32 @@
+# AxoProtect ayarlari
+messages:
+  prefix: "&8[&6AxoProtect&8] &7"
+  denied-break: "&cBu alanda blok kiramazsin."
+  denied-place: "&cBu alanda blok koyamazsin."
+  selection-start: "&aSecim basladi. Sol tik: 1. nokta, sag tik: 2. nokta."
+  point-1: "&e1. nokta secildi: &f%x% %y% %z%"
+  point-2: "&e2. nokta secildi: &f%x% %y% %z%"
+  saved-break: "&aAlan kaydedildi: &f%world% &7| Blok kirma: &f%state%"
+  saved-place: "&aAlan kaydedildi: &f%world% &7| Blok koyma: &f%state%"
+  invalid-world: "&cDunya yuklu degil: &f%world%"
+  usage: "&eKullanim: /dunya <dunya> normal <blokkirma|blokkoyma> <ac|kapa>"
+  no-permission: "&cBu islemi yapma iznin yok."
+  wand-only-player: "&cBu komut oyuncular tarafindan kullanilabilir."
+  selection-cancelled: "&cAlan secimi iptal edildi."
+  overlap-info: "&7Ayni alana yeni kural eklenirse o islem icin en son eklenen kural gecerli olur."
+protection:
+  # Oyuncularin OP olmadan da korumayi asabilmesi icin izin.
+  bypass-permission: "axoprotect.bypass"
+  # Secim baltasi yalnizca bu esya ve oyuncuya ozel PDC etiketiyle taninir.
+  wand-material: WOODEN_AXE
+  max-selection-volume: 5000000
+integrations:
+  # TrapPlugin'in chunk satin alma/davet sistemiyle cakismamasi icin,
+  # TrapPlugin'in kullandigi dunya adlarini buraya ekleyin.
+  trapplugin-worlds: []
+  # TrapPlugin mevcut degilse bu ayar etkisizdir.
+  skip-trapplugin-worlds: true
+join-messages:
+  # Pluginlerin diger eklentiler tarafindan gonderdigi tum mesajlari genel olarak
+  # engellemek Bukkit API ile garanti edilemez. Bu secenek AxoProtect mesajlarini kontrol eder.
+  suppress-axoprotect-join-message: true
