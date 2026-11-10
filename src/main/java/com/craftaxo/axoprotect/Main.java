@@ -156,6 +156,7 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
             return true;
         }
 
+        removeWands(player);
         ItemStack wand = createWand();
         player.getInventory().addItem(wand).values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
         selections.put(player.getUniqueId(), new Selection(world.getName(), breaking, st.equals("ac")));
