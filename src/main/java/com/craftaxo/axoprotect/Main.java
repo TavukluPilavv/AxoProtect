@@ -119,25 +119,11 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
             sender.sendMessage(color(msg("wand-only-player")));
             return true;
         }
-        if (args.length != 5 || !normalize(args[1]).equals("normal")) {
+        if (args.length != 4 || !normalize(args[1]).equals("normal")) {
             player.sendMessage(color(msg("usage")));
             return true;
         }
-
-        String worldName = args[0];
-        World world = Bukkit.getWorld(worldName);
-        if (world == null) {
-            player.sendMessage(color(msg("invalid-world").replace("%world%", worldName)));
-            return true;
-        }
-
-        String operation = normalize(args[2]);
-        String state = normalize(args[3]);
-        // Accept both 4-token and optional trailing confirmation? The documented syntax is 4 args:
-        // /dunya world normal blokkirma kapa
-        // A fifth argument is rejected below for typo safety.
-        player.sendMessage(color(msg("usage")));
-        return true;
+        return beginSelection(player, args[0], args[2], args[3]);
     }
 
     private boolean beginSelection(Player player, String worldName, String operation, String state) {
