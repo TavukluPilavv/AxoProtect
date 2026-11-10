@@ -83,7 +83,8 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
                     id, world,
                     s.getInt("min-x"), s.getInt("min-y"), s.getInt("min-z"),
                     s.getInt("max-x"), s.getInt("max-y"), s.getInt("max-z"),
-                    s.getBoolean("break-allowed", true), s.getBoolean("place-allowed", true),
+                    s.isSet("break-allowed") ? s.getBoolean("break-allowed") : null,
+                    s.isSet("place-allowed") ? s.getBoolean("place-allowed") : null,
                     s.getLong("created", System.currentTimeMillis())
             ));
         }
@@ -225,13 +226,8 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
         }
         long now = System.currentTimeMillis();
         String id = "region-" + now + "-" + UUID.randomUUID().toString().substring(0, 8);
-        boolean breakAllowed = true, placeAllowed = true;
-        ProtectedRegion previous = latestRegionAt(s.world, minX, minY, minZ);
-        if (previous != null) {
-            breakAllowed = previous.breakAllowed;
-            placeAllowed = previous.placeAllowed;
-        }
-        if (s.breakRule) breakAllowed = s.allowed; else placeAllowed = s.allowed;
+        Boolean breakAllowed = s.breakRule ? s.allowed : null;
+        Boolean placeAllowed = s.breakRule ? null : s.allowed;
         ProtectedRegion region = new ProtectedRegion(id, s.world, minX, minY, minZ, maxX, maxY, maxZ, breakAllowed, placeAllowed, now);
         regions.add(region);
         saveRegions();
@@ -242,10 +238,12 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
         player.sendMessage(color(message.replace("%world%", s.world).replace("%state%", state)));
     }
 
-    private ProtectedRegion latestRegionAt(String world, int x, int y, int z) {
+    private Boolean regionRuleAt(String world, int x, int y, int z, boolean breaking) {
         for (int i = regions.size() - 1; i >= 0; i--) {
             ProtectedRegion r = regions.get(i);
-            if (r.contains(world, x, y, z)) return r;
+            if (!r.contains(world, x, y, z)) continue;
+            Boolean rule = breaking ? r.breakAllowed : r.placeAllowed;
+            if (rule != null) return rule;
         }
         return null;
     }
@@ -261,8 +259,8 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         if (canBypass(player) || isTrapWorld(event.getBlock().getWorld())) return;
-        ProtectedRegion r = latestRegionAt(event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
-        if (r != null && !r.breakAllowed) {
+        Boolean allowed = regionRuleAt(event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), true);
+        if (Boolean.FALSE.equals(allowed)) {
             event.setCancelled(true);
             player.sendMessage(color(msg("denied-break")));
         }
@@ -273,8 +271,8 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
         Player player = event.getPlayer();
         if (canBypass(player) || isTrapWorld(event.getBlock().getWorld())) return;
         Block b = event.getBlock();
-        ProtectedRegion r = latestRegionAt(b.getWorld().getName(), b.getX(), b.getY(), b.getZ());
-        if (r != null && !r.placeAllowed) {
+        Boolean allowed = regionRuleAt(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), false);
+        if (Boolean.FALSE.equals(allowed)) {
             event.setCancelled(true);
             player.sendMessage(color(msg("denied-place")));
         }
@@ -340,10 +338,10 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor,
     private static final class ProtectedRegion {
         final String id, world;
         final int minX, minY, minZ, maxX, maxY, maxZ;
-        final boolean breakAllowed, placeAllowed;
+        final Boolean breakAllowed, placeAllowed;
         final long created;
         ProtectedRegion(String id, String world, int minX, int minY, int minZ, int maxX, int maxY, int maxZ,
-                        boolean breakAllowed, boolean placeAllowed, long created) {
+                        Boolean breakAllowed, Boolean placeAllowed, long created) {
             this.id=id; this.world=world; this.minX=minX; this.minY=minY; this.minZ=minZ;
             this.maxX=maxX; this.maxY=maxY; this.maxZ=maxZ;
             this.breakAllowed=breakAllowed; this.placeAllowed=placeAllowed; this.created=created;
