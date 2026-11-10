@@ -34,7 +34,7 @@ Varsayilan olarak OP'lere verilir. LuckPerms ile ornek:
 
 ## TrapPlugin notu
 
-TrapPlugin 1.0.0 JAR'indaki config yapisi `traps` altinda saklaniyor. AxoProtect varsayilan olarak TrapPlugin entegrasyonunu otomatik varsaymaz; TrapPlugin'in kurulu oldugu dunyayi `config.yml` icindeki `integrations.trapplugin-worlds` listesine ekleyin. Bu dunyalarda AxoProtect koruma eventlerini atlar ve TrapPlugin'in kendi chunk/izin kontrollerine dokunmaz.
+TrapPlugin algilandiginda AxoProtect, TrapPlugin'in `traps` verisindeki chunk anahtarlarindan dunyalari otomatik tanimlamayi dener. Ek olarak `config.yml` icindeki `integrations.trapplugin-worlds` listesine dunya adlarini elle ekleyebilirsiniz. Taninan bu dunyalarda AxoProtect blok koruma eventlerini atlar ve TrapPlugin'in kendi chunk/davet kontrollerine dokunmaz. Entegrasyonun dogru calistigini sunucuda test edin; TrapPlugin'in veri formati degisirse elle dunya listesi kullanin.
 
 ## Mesajlar
 
